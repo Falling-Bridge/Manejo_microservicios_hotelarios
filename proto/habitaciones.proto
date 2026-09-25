@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package habitaciones;
+
+// Servicio interno. Solo lo consume Reservas. No se expone al exterior.
+service HabitacionesService {
+  rpc ConsultarDisponibilidad (ConsultaRequest) returns (DisponibilidadResponse);
+  rpc ListarDisponibilidad (RangoRequest) returns (ListaDisponibilidadResponse);
+  rpc ReservarHabitacion (ReservaHabitacionRequest) returns (OperacionResponse);
+  rpc LiberarHabitacion (LiberarHabitacionRequest) returns (OperacionResponse);
+}
+
+message ConsultaRequest {
+  string fecha = 1;                    // YYYY-MM-DD
+}
+
+message DisponibilidadResponse {
+  string fecha = 1;
+  int32 habitaciones_libres = 2;
+  repeated string ids_habitaciones = 3;
+}
+
+message RangoRequest {
+  string fecha_inicio = 1;
+  string fecha_fin = 2;
+}
+
+message DisponibilidadDia {
+  string fecha = 1;
+  int32 habitaciones_libres = 2;
+}
+
+message ListaDisponibilidadResponse {
+  repeated DisponibilidadDia dias = 1;
+}
+
+message ReservaHabitacionRequest {
+  string fecha = 1;
+  string reserva_id = 2;
+}
+
+message LiberarHabitacionRequest {
+  string fecha = 1;
+  string reserva_id = 2;
+}
+
+message OperacionResponse {
+  bool ok = 1;
+  string mensaje = 2;
+  string habitacion_id = 3;
+}

@@ -1,0 +1,50 @@
+services:
+  habitaciones:
+    build:
+      context: .
+      dockerfile: servicio_habitaciones/Dockerfile
+    container_name: habitaciones
+    ports:
+      - "50051:50051"
+    volumes:
+      - habitaciones_data:/app/data
+    environment:
+      - DB_PATH=/app/data/habitaciones.db
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; s=socket.socket(); s.settimeout(1); s.connect(('localhost',50051)); s.close()\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  reservas:
+    build:
+      context: .
+      dockerfile: servicio_reservas/Dockerfile
+    container_name: reservas
+    ports:
+      - "8000:8000"
+    depends_on:
+      habitaciones:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - HABITACIONES_GRPC=habitaciones:50051
+      - REDIS_URL=redis://redis:6379
+      - API_KEY=clave-demo-123
+      - DB_PATH=/app/data/reservas.db
+      - GRPC_TIMEOUT_MS=500
+      - CACHE_ENABLED=true
+    volumes:
+      - reservas_data:/app/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  habitaciones_data:
+  reservas_data:

@@ -1,0 +1,8 @@
+openapi: 3.0.0
+info:
+  title: API de Reservas - Cadena Hotelera Costanera
+  version: "1.0.0"
+  description: |
+    API REST pública del sistema de Reservas.
+    La disponibilidad se consulta internamente vía gRPC al servicio de Habitaciones.
+paths: {}
