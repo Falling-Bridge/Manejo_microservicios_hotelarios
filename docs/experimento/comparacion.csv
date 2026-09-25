@@ -1,0 +1,5 @@
+metrica,sin_cache_ms,con_cache_ms,mejora_pct
+p50,7.09,3.48,50.89
+p95,8.8,4.98,43.42
+p99,14.5,6.19,57.31
+mean,7.43,3.76,49.41
